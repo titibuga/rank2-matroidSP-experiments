@@ -178,6 +178,10 @@ function runSecretaryTrials(item_list, secretary_strategy; n_trials = 20)
 end
 
 
+###################################################
+############## Instance Generators ################
+###################################################
+
 function createOneThirdInstance(n)
     
     function classId(i)
@@ -191,5 +195,11 @@ function createOneThirdInstance(n)
     end
 
     return [Item(classId(i), n - i + 1) for i in 1:n]
+
+end
+
+function createUniformInstance(n)
+
+    return [Item(i,i) for i in 1:n]
 
 end
