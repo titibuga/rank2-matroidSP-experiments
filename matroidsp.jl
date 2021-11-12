@@ -177,6 +177,15 @@ function runSecretaryTrials(item_list, secretary_strategy; n_trials = 20)
 
 end
 
+# Simple function running with some arbitrary instance
+function runGreedyExperiments(n, n_trials)
+
+    item_list = createInstanceOneHeavyClass(n)
+
+    runSecretaryTrials(item_list, greedy; n_trials = n_trials)
+
+end
+
 
 ###################################################
 ############## Instance Generators ################
@@ -203,3 +212,73 @@ function createUniformInstance(n)
     return [Item(i,i) for i in 1:n]
 
 end
+
+function createInstanceWithFixedClasses(n, n_classes)
+
+    return [Item(rand(1:n_classes), i) for i in 1:n]
+
+end
+
+function createInstanceLogClasses(n)
+
+    class_list = [2*ceil(log(i + 1)) for i in 1:n]
+    shuffle!(class_list)
+    return [Item(class_list[i], i) for i in 1:n]
+
+end
+
+function twoLargeClassesWithDomination(n, n_classes)
+
+    n_small_classes = max(1, n_classes - 2)
+
+    function class(i)
+        if i < ceil(n/3)
+            return rand(1:n_small_classes)
+        elseif  i < ceil(2n/3)
+            return n_small_classes + 1
+        else
+            return n_small_classes + 2
+        end
+    end
+
+    return [Item(class(i), i) for i in 1:n]   
+
+end
+
+function twoLargeClassesWithOUTDomination(n, n_classes)
+
+    n_small_classes = max(1, n_classes - 2)
+
+    function class(i)
+        if i < ceil(n/2)
+            return rand(1:n_small_classes)
+        else
+            return n_small_classes + rand(1:2)
+    end
+
+    return [Item(class(i), i) for i in 1:n]   
+
+end
+
+function createInstanceOPTWithoutParallel(n, n_classes)
+
+    n_light_classes = max(1, n_classes-2)
+
+    return vcat([Item(n_light_classes + 2, n), Item(n_light_classes + 1, n-1)],[Item(rand(1:n_light_classes), i) for i in 1:(n -2)])
+
+end
+
+function createInstanceOneHeavyClass(n; frac = 0.1)
+    
+    function class(i)
+        if i/n > 1 - frac
+            return n
+        else
+            return i
+        end
+    end
+
+    return [Item(class(i), i ) for i in 1:n]
+end
+
+
