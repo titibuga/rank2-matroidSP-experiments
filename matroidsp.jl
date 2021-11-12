@@ -254,6 +254,7 @@ function twoLargeClassesWithOUTDomination(n, n_classes)
             return rand(1:n_small_classes)
         else
             return n_small_classes + rand(1:2)
+        end
     end
 
     return [Item(class(i), i) for i in 1:n]   
